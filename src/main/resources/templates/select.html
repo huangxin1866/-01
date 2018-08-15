@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>博彩首页</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+		<link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+		<!--导入jquery的文件-->
+		<script type="text/javascript" src="js/jquery-1.11.0.js"  th:src="@{/js/jquery-1.11.0.js}"></script>
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="js/bootstrap.min.js"  th:src="@{/js/bootstrap.min.js}"></script>
+		<script src="js/lottery.js"  th:src="@{/js/lottery.js}"></script>
+
+		<link rel="stylesheet" href="css/lottery.css" th:href="@{/css/lottery.css}"  />
+		
+		<script th:inline="javascript">
+
+			
+			/*
+			 javascript开发步骤:
+			 	1.确定事件
+			 	2.事件通常会触发函数
+			 	3.函数里面要搞点事情: 获取元素,操作元素, 页面初始化
+			*/
+			/*
+			 	1. 确定事件: onclick事件
+			 	2. 事件触发函数 : function
+			 	3. 函数里面干点事情 : 
+			 		获取当前被点击的元素
+			 		给当前点击的元素添加被选中的样式
+			*/
+			/*
+			    先给页面上所有的红球添加点击事件
+			    1.先找到页面上所有的红球 .ball-red
+			*/
+			// 页面加载完成会触发的函数
+			$(function(){
+
+			    //获取model中是否包含randomOneFlag
+				var randomOneFlag = [[${randomOneFlag}]];
+				if(randomOneFlag != null){
+				    randomOne();
+				}
+
+				//红球被选中的逻辑
+				$(".ball-red").click(function(){
+					//1.先判断当前球是否被选中
+					var isSelected = $(this).is(".ball-red-selected");
+					console.log(isSelected)
+					//2.若被选中则取消选中状态
+					if(isSelected){
+						$(this).removeClass("ball-red-selected");
+					}else{
+						//3.若没有被选中,则判断球是否大于等于6,再修改样式
+						var len = $(".ball-red-selected").length;
+						if(len >= 6){
+							alert("最多只能选中6个红球")
+						}else{
+							$(this).addClass("ball-red-selected");
+						}
+					}
+				});
+				
+				/*蓝球被选中的业务逻辑
+				  1.确定事件: onclick
+				  2.事件触发函数
+				  3.函数里面干点事情
+				  	  1.取消页面中被选中蓝球的样式
+				  	  2.给当前的蓝球添加选中的样式
+				 * */
+				$(".ball-blue").click(function(){
+					//先删除被选中蓝球的样式
+					$(".ball-blue-selected").removeClass("ball-blue-selected");
+					//给当前的蓝球添加选中的样式
+					$(this).addClass("ball-blue-selected")
+				});
+				
+				//去给机选幸运号绑定一个单机事件
+				/*
+					1.获取随机几注 
+				 	2.循环几次 : randomOne()
+				 		//获取随机产生的彩票号码
+				 	3.将每次循环产生的数据保存起来 数组 : Array
+				 	4.将数组的内容发送给后台保存起来
+				*/
+				$("#btn_random").click(function(){
+//					1.获取随机几注 
+					var count = $("#selectId").val();
+					//定义一个数组保存循环中的内容
+					var arr = Array();
+//				 	2.循环几次 : randomOne()
+					for (var i=0;i<count;i++) {
+						//在界面上随机产生了一组彩票
+						randomOne();
+						//获取随机彩票的结果
+						var ball = getResult();
+						//3.将每次循环产生的数据保存起来 数组 : Array
+						arr.push(ball);
+					}
+					console.log(arr);
+//				 	4.将数组的内容发送给后台保存起来
+					sendToController(arr);
+				});
+			});
+			
+			//数据采用异步的方式发送给后台
+			function sendToController(arr){
+				var url="/cart/addToCart";
+				//注意: 以字符串的形式发送数据 ,但是这里是一个javascript的数组
+				// 将javascript数组转成一个json格式的字符串
+				var data = {"balls":JSON.stringify(arr)};
+
+				console.log("转换之后的数组:"+JSON.stringify(arr));
+				
+				$.post(url,data,function(result){
+					console.log(result);
+					console.log(result.cartSize);
+					$("#cartSizeId").text(result.cartSize);
+				},"json");
+			}
+			
+			//获取随机产生的彩票号码
+			function getResult(){
+				//先找到所有的被选中的红球
+				var redBalls = "";
+				$(".ball-red-selected").each(function(i,ball){
+					//得到每一个球里面的内容
+					var red = $(ball).text();
+					redBalls +=","+red;
+				});
+				console.log(redBalls);  // ,02,04,13,25,28,29
+				redBalls = redBalls.substr(1); // 02,04,13,25,28,29
+				console.log(redBalls);
+				//找到被选中的蓝球
+				var blueBall = $($(".ball-blue-selected").get(0)).text();
+				console.log(blueBall)
+				return {
+						"red":redBalls,
+						"blue":blueBall
+				}
+			}
+			
+			
+			//随机的选中一注双色球
+			function randomOne(){
+				//清空页面上所有被选中红球的样式
+				$(".ball-red-selected").removeClass("ball-red-selected")
+				//红球最多只能6个
+				while($(".ball-red-selected").length < 6){
+					var i = Math.floor(Math.random()*33);
+					//随机获取一个红球
+					$($(".ball-red").get(i)).addClass("ball-red-selected")
+				}
+				//蓝球最多只能1个
+				//先删除被选中蓝球的样式
+				$(".ball-blue-selected").removeClass("ball-blue-selected");
+				var j = Math.floor(Math.random()*16);  // 0-15
+				$($(".ball-blue").get(j)).addClass("ball-blue-selected")
+			}
+
+			//添加按钮的逻辑
+			function addOne(){
+			    //获取红球选中的个数
+                var redLength = $(".ball-red-selected").length;
+				//获取蓝球选中的个数
+				var blueLength = $(".ball-blue-selected").length;
+
+                //1.若用户一个球都没有选,为了吸引用户去购买,机选一注
+				if(redLength==0 && blueLength==0){
+				    randomOne();
+				}else if(redLength != 6 || blueLength != 1){
+                    //2.判断红球数量6 和蓝球1数量是否满足条件,若不满足则提示
+					alert("请选择6个红球,1个蓝球");
+				}else{
+                    //3.若球满足条件则将数据发送给后台保存
+					//获取选中的球的结果
+					var one = getResult(); // {red:"01,02,..." ,blue:"15"}
+					// 将数据放到一个数组中
+					var arr = Array();
+					arr.push(one);
+
+					//4.发送ajax请求
+                    sendToController(arr);
+				}
+
+
+
+			}
+			
+		</script>
+	</head>
+
+	<body>
+		<!--布局容器-->
+		<div class="container-fluid">
+
+			<!--1.标题部分-->
+			<div class="row title" id="title">
+				<div class="col-xs-12">
+					<div style="position: absolute;" onclick="history.back()">&lt;返回</div>
+					选号
+				</div>
+			</div>
+
+			<div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+				<div class="col-xs-4" style="padding-left: 0;">第2018019期</div>
+				<div class="col-xs-8" style="padding-left: 0;padding-right: 0;">
+					奖池<span style="color: red;">4亿1523万</span>,可开出<span style="color: red;">83注</span>500万
+				</div>
+			</div>
+			
+			<div style="color:darkgray">请选择6个红球,1个蓝球</div>
+			
+			<!--红球区域-->
+			<div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">01</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">02</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">03</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">04</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">05</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">06</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">07</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">08</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">09</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">10</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">11</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">12</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">13</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">14</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">15</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">16</div>
+				</div>
+				
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">17</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">18</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">19</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">20</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">21</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">22</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">23</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">24</div>
+				</div>
+				
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">25</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">26</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">27</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">28</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">29</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">30</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">31</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">32</div>
+				</div>
+				
+				<div class="col-xs-ball">
+					<div class="ball-item ball-red">33</div>
+				</div>
+			</div>
+			
+			<!--清除浮动-->
+			<div class="clearfix"></div>
+			
+			<!--蓝球区域-->
+			<div style="margin-top: 20px;">
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue ">01</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">02</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">03</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">04</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">05</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">06</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">07</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">08</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">09</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">10</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">11</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">12</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">13</div>
+				</div>
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">14</div>
+				</div>
+				
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">15</div>
+				</div>
+				
+				<div class="col-xs-ball">
+					<div class="ball-item ball-blue">16</div>
+				</div>
+			</div>
+			
+			<!--清除浮动-->
+			<div class="clearfix"></div>
+			
+			<!--添加的按钮-->
+			<div style="margin-top: 10px;">
+				<input type="button" onclick="addOne()" value="添加" class="btn btn-default pull-right" />
+			</div>
+			
+			<!--清除浮动-->
+			<div class="clearfix"></div>
+			
+			<!--机选幸运号的按钮-->
+			<div style="margin-top: 10px;">
+				<input type="button" value="机选幸运号" id="btn_random"  class="btn btn-default pull-right" />
+				<select id="selectId" class="form-control pull-right" style="width: 60px;display: inline-block;"> 
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+					<option>5</option>
+					<option>6</option>
+					<option>7</option>
+					<option>8</option>
+					<option>9</option>
+					<option>10</option>
+				</select>
+				
+			</div>
+			
+			<!--主要是解决页面显示不完整-->
+			<div style="margin-bottom: 58px;height: 58px;"></div>
+
+			<!--5.底部菜单栏-->
+			<div class="menu">
+				<div class="col-xs-6 menu-item" onclick="tiaozhuan('/cart/cartUI')" >
+					<span class="glyphicon glyphicon-shopping-cart"></span>
+					<span id="cartSizeId" class="badge" style="background-color: red;position: absolute;top: -10px"></span>
+					<p>购物车</p>
+				</div>
+				<div class="col-xs-6 menu-item">
+					<span class="glyphicon glyphicon-save"></span>
+					<p>立即投注</p>
+				</div>
+				
+			</div>
+
+		</div>
+	</body>
+
+</html>

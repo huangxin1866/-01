@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>博彩首页</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+		<link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+		<!--导入jquery的文件-->
+		<script type="text/javascript" src="js/jquery-1.11.0.js"  th:src="@{/js/jquery-1.11.0.js}"></script>
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="js/bootstrap.min.js"  th:src="@{/js/bootstrap.min.js}"></script>
+
+		<link rel="stylesheet" href="css/lottery.css" th:href="@{/css/lottery.css}"  />
+	</head>
+
+	<body>
+		<!--布局容器-->
+		<div class="container-fluid">
+
+			<!--1.标题部分-->
+			<div class="row title">
+				<div class="col-xs-12">
+					注册
+				</div>
+			</div>
+
+			<div class="row" style="margin-top: 32px;">
+				<!--空列-->
+				<div class="col-xs-1"></div>
+				<!--内容部分-->
+				<div class="col-xs-10">
+					<!--2.登录注册的标题-->
+					<div class="row">
+						<div class="col-xs-6 text-center" onclick="location.href='04-登录页面.html'">登录</div>
+						<div class="col-xs-6 text-center" style="color: green;">注册</div>
+					</div>
+
+					<!--3.水平分割线-->
+					<hr style="border: 2px solid gainsboro;" />
+
+					<div style="color: red" th:text="${msg}">
+
+					</div>
+
+					<form action="/user/register" method="post">
+						<!--4.表单输入项-->
+						<div class="form-group">
+							<input type="text" name="email" th:value="${user.email}" class="form-control" placeholder="请输入您的邮箱...">
+						</div>
+						<!--5.密码-->
+						<div class="form-group">
+							<input type="password" name="password" class="form-control" placeholder="请输入您的密码...">
+						</div>
+						<!--6.昵称-->
+						<div class="form-group">
+							<input type="text" name="username" class="form-control" placeholder="请输入您的昵称...">
+						</div>
+
+						<!--7.验证码-->
+						<div class="row">
+							<div class="col-xs-8">
+								<div class="form-group">
+									<input type="text" name="mobile" id="input_mobile" class="form-control" placeholder="请输入您的手机号...">
+								</div>
+							</div>
+							<div class="col-xs-4">
+								<!--<button type="button">发送</button>-->
+								<input type="button" class="btn btn-default" value="发送" id="btnSend" />
+								<script>
+									$(function(){
+										//给按钮绑定一个单击事件
+										$("#btnSend").click(function(){
+										    //发送ajax请求
+                                            var mobileValue = $("#input_mobile").val();
+											//var url = "/user/sendSMS?mobile="+mobile;
+											var url = "/user/sendSMS"
+
+											$.get(url,{mobile:mobileValue},function(data){
+												console.log(data);
+											});
+										});
+									});
+								</script>
+							</div>
+						</div>
+
+						<!--8.填写验证码-->
+						<div class="form-group">
+							<input type="text" name="code" class="form-control" placeholder="请输入验证码...">
+						</div>
+
+						<!--9.注册-->
+						<div class="form-group">
+							<input type="submit" class="form-control btn btn-success" value="注册">
+						</div>
+					</form>
+					<!--跳转去登录-->
+					<div style="margin-top: 15px;">
+						已有账号?&nbsp;|&nbsp;
+						<a href="04-登录页面.html" style="color: green;">去登录</a>
+					</div>
+				</div>
+				<!--空列-->
+				<div class="col-xs-1"></div>
+			</div>
+
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>博彩首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+    <!--导入jquery的文件-->
+    <script type="text/javascript" src="js/jquery-1.11.0.js" th:src="@{/js/jquery-1.11.0.js}"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+    <link rel="stylesheet" href="css/lottery.css" th:href="@{/css/lottery.css}"/>
+
+
+    <style>
+        .ball-item {
+            margin-right: 5px;
+        }
+    </style>
+
+
+</head>
+
+<body>
+<!--布局容器-->
+<div class="container-fluid">
+
+    <!--1.标题部分-->
+    <div class="row title">
+        <div class="col-xs-12">
+            <div style="position: absolute;" onclick="history.back()">&lt;返回</div>
+            订单详情
+        </div>
+    </div>
+
+
+    <div style="margin-top: 10px;margin-bottom: 10px;">
+        订单详情:
+    </div>
+
+    <!--购物项内容-->
+    <div class="row" style="padding-top: 10px;padding-bottom: 10px;border: 1px solid #E5E5E5;" th:each="orderitem : ${order.orderItems}">
+        <div class="col-xs-1" style="padding-left: 10px;padding-top: 18px;">
+        </div>
+        <div class="col-xs-10" style="padding-right: 0px;">
+            <div>
+                <div class="ball-item ball-red" th:text="${orderitem.red.split(',')[0]}">01</div>
+                <div class="ball-item ball-red" th:text="${orderitem.red.split(',')[1]}">11</div>
+                <div class="ball-item ball-red" th:text="${orderitem.red.split(',')[2]}">22</div>
+                <div class="ball-item ball-red" th:text="${orderitem.red.split(',')[3]}">23</div>
+                <div class="ball-item ball-red" th:text="${orderitem.red.split(',')[4]}">28</div>
+                <div class="ball-item ball-red" th:text="${orderitem.red.split(',')[5]}">30</div>
+                <div class="ball-item ball-blue" th:text="${orderitem.blue}">15</div>
+            </div>
+            <div style="margin-top: 5px;" th:text="|单式${orderitem.count}注 ${orderitem.count*2}元|">单式1注 2元</div>
+        </div>
+        <div class="col-xs-1" style="padding-left: 10px;padding-top: 18px;">
+        </div>
+    </div>
+
+
+    <div style="margin-top: 134px;">
+        <div class="row" style="border: 1px solid #E5E5E5;height: 40px;line-height: 40px;">
+            <div class="col-xs-10">
+                黑马币支付
+            </div>
+            <div class="col-xs-2">
+                <div class="radio">
+                    <input type="radio" name="paytype"/>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="border: 1px solid #E5E5E5;height: 40px;line-height: 40px;">
+            <div class="col-xs-10">
+                微信支付
+            </div>
+            <div class="col-xs-2">
+                <div class="radio">
+                    <input type="radio" name="paytype"/>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="border: 1px solid #E5E5E5;height: 40px;line-height: 40px;">
+            <div class="col-xs-10">
+                支付宝支付
+            </div>
+            <div class="col-xs-2">
+                <div class="radio">
+                    <input type="radio" name="paytype"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!--主要是解决页面显示不完整-->
+    <div style="margin-bottom: 58px;"></div>
+
+    <!--5.底部菜单栏-->
+    <div class="menu">
+        <div class="col-xs-12 menu-item" style="height: 50px;line-height: 50px;">
+            <p>确认付款 6元</p>
+        </div>
+
+
+    </div>
+
+</div>
+</body>
+
+</html>

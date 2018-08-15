@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>条件判断</title>
+</head>
+<body>
+<h1>条件判断</h1>
+    <div th:if="${i > 11}" >
+        i 是大于 11
+    </div>
+    <div th:if="${i > 9}" >
+        i 是大于 9
+    </div>
+
+    <div th:if="${city == '深圳'}">
+        来了就是深圳人
+    </div>
+    <div th:if="${city != '深圳'}">
+        其它城市
+    </div>
+
+    <div th:text="${i>9}?'i大于9':'i不大于9'"></div>
+
+
+    <div th:switch="${i}">
+        <div th:case="4">i等于4</div>
+        <div th:case="5">i等于5</div>
+        <div th:case="10">i等于10</div>
+        <div th:case="*">默认值</div>  <!--相当于是设置了default默认值的意思-->
+    </div>
+
+</body>
+</html>

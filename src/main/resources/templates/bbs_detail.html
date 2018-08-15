@@ -1,0 +1,80 @@
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>黑马彩票</title>
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	  <link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+	  <!--导入jquery的文件-->
+	  <script type="text/javascript" src="js/jquery-1.11.0.js"  th:src="@{/js/jquery-1.11.0.js}"></script>
+	  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	  <script src="js/bootstrap.min.js"  th:src="@{/js/bootstrap.min.js}"></script>
+
+	  <link rel="stylesheet" href="css/lottery.css" th:href="@{/css/lottery.css}"  />
+     <style>
+    	.ball-div{
+    		border: 1px solid gainsboro;min-height: 80px;padding-top: 5px;
+    	}
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row title">
+				<div class="col-xs-12">
+					<div style="position: absolute;" onclick="history.back()">&lt;返回</div>
+					博彩论坛
+				</div>
+			</div>
+     
+     
+      
+      
+      
+      <!--帖子列表-->
+	    <div class="row ball-div">
+	        <div class="col-xs-11">
+	        	<div class="row" style="line-height: 20px;word-break: break-all;">
+							<h4 th:text="${note.title}">我买的这注01,11,20,23,25,30...彩票</h4>
+						</div>
+	          <div class="row">
+	          	<span style="font-size:14px" th:text="${note.username}">小凯凯</span><span style="font-size:12px;margin-left:4px" th:text="${note.time}">2018-01-06 21:20:20</span>
+	          </div>
+	          <div class="row" th:text="${note.content}">
+	          	老衲昨晚夜观天象,这注彩票今天一定会中奖....
+	          </div>
+	        </div>
+	    </div>
+
+		<div class="row ball-div" th:each="comment : ${note.comments}">
+		<div class="col-xs-11">
+			<!--帖子的评论内容-->
+			<div th:text="${comment.content}" class="row" style="line-height: 20px;margin-bottom: 15px;margin-top: 10px;word-break: break-all;">
+			</div>
+
+			<div class="row pull-right">
+				<!--评论者的名字-->
+				<span style="font-size:14px" th:text="${comment.username}">小凯凯</span>
+				<!--评论的时间-->
+				<span style="font-size:12px;margin-left:4px" th:text="${comment.time}">2018-01-06 21:20:20</span>
+			</div>
+		</div>
+	</div>
+	    
+	    
+      
+  			<div style="margin-bottom: 200px;"></div>
+      
+	     	<div class="row" style="position: fixed;bottom: 0;width: 100%;">
+	     		
+	     		<form action="#" th:action="@{/comment/add}" method="post">
+					<!--帖子的编号-->
+					<input type="hidden" name="nid" th:value="${note.nid}" />
+	     			<!--输入框-->
+	     			<textarea class="form-control" style="height: 100px;" name="content" placeholder="请输入评论内容..."></textarea>
+	     			<!--确认发表的按钮-->
+	     			<button type="submit" class="form-control">发表</button>
+	     		</form>
+	     	</div>
+     
+    </div>
+  </body>
+</html>

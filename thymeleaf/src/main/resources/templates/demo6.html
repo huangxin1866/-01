@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <h1>循环处理</h1>
+    <div th:each="cc : ${cities}">
+        <div th:text="${cc}"></div>
+    </div>
+
+    <script>
+        function dianwo(msg){
+            alert(msg);
+        }
+
+    </script>
+
+    <!--<button type="button" onclick="dianwo('44944')" th:onclick="'+dianwo('${name}+')'">点我试试</button>-->
+    <button type="button" onclick="dianwo('44944')" th:onclick="|dianwo('${name}')|">点我试试</button>
+
+
+
+    <!--
+        回顾:
+            表达式:
+                变量表达式 : ${变量名}
+                URL表达式: @{路径}  默认会取工程路径
+                代码段表达式 : ~{ 引入文件的路径 :: 引入文件的内容的ID}
+            条件表达式
+                th:if="${i > 10}"
+
+                th:text="${i > 10}?'条件成立':'条件不成立'"
+
+                th:switch=${i}
+                    th:case='4'
+                    th:case='5'
+                    th:case='*' 默认值
+
+            循环处理:
+                th:each="接收的变量 : ${要遍历的数组}"
+    -->
+
+</body>
+</html>

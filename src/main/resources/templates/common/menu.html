@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+        <!--5.底部菜单栏-->
+        <div class="menu" id="menu_div">
+            <div class="col-xs-4 menu-item menu-item-activied"  onclick="tiaozhuan('/')">
+                <span class="glyphicon glyphicon-home"></span>
+                <p>首页</p>
+            </div>
+            <div class="col-xs-4 menu-item" onclick="tiaozhuan('/cart/selectUI')">
+                <span class="glyphicon glyphicon-shopping-cart"></span>
+                <p>选号</p>
+            </div>
+            <div class="col-xs-4 menu-item" onclick="tiaozhuan('/user/userUI')">
+                <span class="glyphicon glyphicon-user"></span>
+                <p>我</p>
+            </div>
+
+            <script>
+                function tiaozhuan(path){
+                    location.href=path;
+                }
+            </script>
+        </div>
+
+</body>
+</html>

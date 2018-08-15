@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>博彩首页</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+  <!--导入jquery的文件-->
+  <script type="text/javascript" src="js/jquery-1.11.0.js"  th:src="@{/js/jquery-1.11.0.js}"></script>
+  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+  <script src="js/bootstrap.min.js"  th:src="@{/js/bootstrap.min.js}"></script>
+
+  <link rel="stylesheet" href="css/lottery.css" th:href="@{/css/lottery.css}"  />
+</head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-12 title">修改头像</div>
+      </div>
+     
+      
+      <div style="margin-top: 50px;">
+      	<img th:src="@{/img/icon.jpg}" class="img-thumbnail center-block">
+      </div>
+      
+      <div>
+        <form action="/upload2" method="post" enctype="multipart/form-data">
+          <input type="file" name="wenjian" class="form-control center-block" style="margin: 20px auto;" />
+
+          <input type="submit" class="btn btn-default center-block" value="点击上传"  />
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

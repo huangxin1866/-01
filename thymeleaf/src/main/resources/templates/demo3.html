@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+   <!-- <div style="background-color: red">
+        <h1>标题部分</h1>
+    </div>-->
+   <div th:replace="~{common/head :: #head_div}"></div>
+
+
+    <div>
+        demo3内容部分
+    </div>
+
+
+   <div th:replace="~{common/foot :: #foot_div}"></div>
+   <!-- <div>
+        <h1>底部菜单栏部分</h1>
+    </div>-->
+</body>
+</html>
